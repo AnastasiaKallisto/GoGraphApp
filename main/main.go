@@ -1,22 +1,26 @@
 package main
 
 import (
-	"fmt"
+	"html/template"
 	"net/http"
 )
+
+func mainPage(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("static/html/MainPage.html",
+		"static/html/canvasForExactGraph.html",
+		"static/html/dropdownButtonExact.html",
+		"static/html/headerMenu.html",
+		"static/html/textDescription.html")
+	t.ExecuteTemplate(w, "mainPage", nil)
+}
+
+func handleFunc() {
+	http.HandleFunc("/", mainPage)
+	http.ListenAndServe("localhost:8080", nil)
+}
 
 func main() {
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "static/html/MainPage.html")
-
-	})
-
-	http.HandleFunc("/process", func(w http.ResponseWriter, r *http.Request) {
-		name := r.FormValue("name")
-		http.ServeFile(w, r, "static/html/MainPage.html")
-		fmt.Fprintf(w, "Hello, %s", name)
-	})
-	http.ListenAndServe("localhost:8080", nil)
+	handleFunc()
 }
