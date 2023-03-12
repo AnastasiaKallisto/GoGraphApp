@@ -5,13 +5,16 @@
 <head>
   <title>GUI</title>
   <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/stylesQuantityForm.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/stylesMenu.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/stylesDropdownMenuTypeOfGraph.css">
   <script src="/static/js/script.js"></script>
 </head>
 <body>
 <div id="menu">
   <ul>
     <li id="menuItem1" onclick="UploadGraphFromFile()">Загрузить граф из файла</li>
-    <li id="menuItem2" onclick="GenerateGraph()">Сгенерировать граф</li>
+    <li id="menuItem2" onclick="openGenerateGraphForm()">Сгенерировать граф</li>
     <li id="menuItem3" onclick ="PrimAlgorithm()">Алгоритм Прима</li>
     <li id="menuItem4" onclick="CruscalAlgorithm()">Алгоритм Краскала</li>
     <li id="menuItem5" onclick="Clear()">Очистить</li>

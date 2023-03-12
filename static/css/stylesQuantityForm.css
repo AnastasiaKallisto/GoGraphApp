@@ -1,0 +1,61 @@
+.formGenerateGraph .btn {
+    background-color: #F3E2A9;
+    font-family: "Palatino Linotype", serif;
+    width: 45%;
+    height: 30px;
+    font-size: 13px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    opacity: 0.9;
+}
+
+.formGenerateGraph .btn-cancel {
+    background-color: #ff9782;
+    font-family: "Palatino Linotype", serif;
+    width: 45%;
+    height: 30px;
+    font-size: 13px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    opacity: 0.9;
+}
+
+.formGenerateGraph {
+    position: absolute;
+    height: 140px;
+    width: 350px;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:auto;
+    border: 1px solid gray;
+    background-color: white;
+}
+
+.form-container {
+    padding: 10px;
+}
+
+.form-container .btn:hover, .btn-cancel:hover {
+    opacity: 1;
+}
+
+.form-container .buttons-container {
+    padding-top: 15px;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.form-container .inputQuantity {
+    padding-top: 2px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid gray;
+}

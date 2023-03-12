@@ -3,102 +3,20 @@ body{
     background-color: #FBF8EF;
     margin: 0;
 }
-#menu{
-    background-color: #F3E2A9;
-    width: 250px;
-    height: 30%;
-    position: absolute;
-    top: 60px;
-    left: 5px;
-}
-#menu ul{
-    padding: 0;
-    margin: 0;
-}
-#menu li{
-    list-style: none;
-    padding: 10px;
-    font-size: 16px;
-    font-family: "Palatino Linotype", serif;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-#menu li:hover{
-    background-color: #F3D59B;
-    font-family: "Palatino Linotype", serif;
-    height: 30px;
-    padding: 15px;
-    font-size: 17px;
-}
 
 .active {
     background-color: #FAAC58;
 }
 
-.dropdown {
-    overflow: hidden;
-    width: 255px;
-    height: 50px;
-    margin-top: 5px;
-    margin-left: 5px;
-    transition: all 0.3s ease;
-}
-
-.dropbtn {
-    background-color: #F3E2A9;
-    font-family: "Palatino Linotype", serif;
-    width: 250px;
-    height: 50px;
-    font-size: 20px;
-    text-align: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: none;
-}
-
-/* Выпадающее содержимое (скрыто по умолчанию) */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #F3E2A9;
-    width: 250px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-/* Ссылки внутри выпадающего списка */
-.dropdown-content button {
-    color: black;
-    width: 250px;
-    font-family: "Palatino Linotype", serif;
-    padding: 12px 16px;
-    background-color: #F3E2A9;
-    text-decoration: none;
-    display: block;
-    border: none;
-    cursor: pointer;
-}
-
-/* Изменение цвета выпадающих ссылок при наведении курсора */
-.dropdown-content button:hover {
-    background-color: #F3D59B;
-    border: none;
-}
-
-/* Показать выпадающее меню при наведении курсора */
-.dropdown:hover .dropdown-content {display: block;}
-
 .canvas {
     margin-left: 220px;
-    width: 1700px;
-    height: 600px;
-}
-
-.form {
-    margin-left: 400px;
+    width: 1200px;
+    height: 400px;
 }
 
 .textInfo {
     margin-left: 400px;
-    margin-top: 100px;
+    margin-top: 20px;
 }
+
+
