@@ -9,14 +9,18 @@ body{
 }
 
 .canvas {
-    margin-left: 220px;
-    width: 1200px;
-    height: 400px;
+    margin-left: 260px;
+    margin-top: 5px;
+    width: 900px;
+    height: 680px;
+    border: 1px solid gray;
 }
 
 .textInfo {
-    margin-left: 400px;
-    margin-top: 20px;
+    font-size: 18px;
+    position: page;
+    margin-left: 300px;
+    margin-top: -40px;
 }
 
 
