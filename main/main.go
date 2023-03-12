@@ -16,8 +16,7 @@ func main() {
 	http.HandleFunc("/process", func(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 		http.ServeFile(w, r, "static/html/MainPage.html")
-		fmt.Fprintf(w, "Hello %s", name)
+		fmt.Fprintf(w, "Hello, %s", name)
 	})
-	//http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.ListenAndServe("localhost:8080", nil)
 }
