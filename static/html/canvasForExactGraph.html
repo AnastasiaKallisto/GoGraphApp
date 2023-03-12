@@ -1,0 +1,15 @@
+{{ define "canvasForExactGraph"}}
+<canvas id="c" class = "canvas"></canvas>
+<script>
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  ctx.beginPath();
+  ctx.fillStyle = 'red';
+  ctx.fillRect(50, 50, 100, 100);
+  ctx.stroke();
+</script>
+
+</body>
+</html>
+
+{{ end }}
