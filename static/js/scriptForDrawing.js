@@ -5,7 +5,7 @@ class Point {
         this.Number = number;
     }
 }
-
+/*
 function drawGraph(){
     const canvas = document.getElementById('canvasForGraph');
     const ctx = canvas.getContext('2d');
@@ -13,4 +13,4 @@ function drawGraph(){
     ctx.fillStyle = 'red';
     ctx.fillRect(50, 50, 100, 100);
     ctx.stroke();
-}
+} */
