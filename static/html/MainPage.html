@@ -4,10 +4,17 @@
 
 {{ template "dropdownButtonExact" }}
 
-{{ template "textDescription"}}
+{{ template "formForQuantity"}}
+
+<p id="text" class="textInfo">
+    {{if .Quantity}}
+    Сгенерирован граф, количество вершин = {{.Quantity}}
+    {{else}}
+    Для начала работы сгенерируйте граф или выберите файл, из которого нужно его загрузить.
+    {{end}}
+</p>
 
 {{ template "canvasForExactGraph" }}
-
 
 {{ end }}
 
