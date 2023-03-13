@@ -10,15 +10,3 @@ class GraphicGraph {
     }
 
 }
-
-
-
-function openIntervalGraphInfo(id, graphNumber){
-    uploadIntervalGraphInfoOnForm(document.getElementById(id), graphNumber);
-    document.getElementById(id).showModal();
-}
-
-function uploadIntervalGraphInfoOnForm(id, graphNumber){
-
-    document.getElementById(id).setAttribute("graphNumber", graphNumber);
-}

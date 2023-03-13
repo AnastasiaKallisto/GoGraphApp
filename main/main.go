@@ -11,10 +11,11 @@ type QuantityData struct {
 
 func exactGraphPage(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
-		"static/html/exactGraph/canvasForExactGraph.html",
+		"static/html/common/canvasForGraph.html",
 		"static/html/exactGraph/dropdownButtonExact.html",
 		"static/html/common/headerMenu.html",
 		"static/html/common/clearForm.html",
+		"static/html/exactGraph/checkoutIntervalGraphForm.html",
 		"static/html/common/quantityForm.html")
 	quantity := r.FormValue("quantity")
 	data := QuantityData{
@@ -23,9 +24,27 @@ func exactGraphPage(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "pageForExactGraph", data)
 }
 
+func intervalGraphPage(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles(
+		"static/html/intervalGraph/pageForIntervalGraph.html",
+		"static/html/intervalGraph/containerForIntervalGraphs.html",
+		"static/html/intervalGraph/dropdownButtonInterval.html",
+		"static/html/intervalGraph/checkoutExactGraphForm.html",
+		"static/html/intervalGraph/formForIntervalGraphInfo.html",
+		"static/html/common/headerMenu.html",
+		"static/html/common/clearForm.html",
+		"static/html/common/quantityForm.html")
+	quantity := r.FormValue("quantity")
+	data := QuantityData{
+		Quantity: quantity,
+	}
+	t.ExecuteTemplate(w, "pageForIntervalGraph", data)
+}
+
 func handleFunc() {
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.HandleFunc("/interval", intervalGraphPage)
 	http.HandleFunc("/exact", exactGraphPage)
 	http.ListenAndServe("localhost:8080", nil)
 }

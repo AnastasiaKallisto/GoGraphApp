@@ -23,4 +23,13 @@ body{
     margin-top: -40px;
 }
 
-
+.btn-close {
+    margin-right: 5px;
+    margin-top: 5px;
+    width: 25px;
+    height: 25px;
+    max-width: 25px;
+    max-height: 25px;
+    background-image:url('/static/img/closeIcon.png');
+    cursor: pointer;
+}

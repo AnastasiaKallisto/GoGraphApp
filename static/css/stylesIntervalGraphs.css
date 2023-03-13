@@ -3,11 +3,21 @@
     margin-left: 260px;
 }
 
+.container-for-interval-graph-info{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+
 .interval-graph-in-container {
     display: inline-block;
     width: 250px;
     height: 250px;
     padding: 5px;
+}
+
+.interval-graph-in-container .image-details {
+    display: none;
 }
 
 .inscription-for-interval-graph-in-container {

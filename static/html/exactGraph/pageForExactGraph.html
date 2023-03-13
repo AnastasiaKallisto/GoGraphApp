@@ -4,11 +4,13 @@
 
 {{ template "dropdownButtonExact" }}
 
-{{ template "formForQuantity"}}
+{{ template "quantityForm"}}
 
 {{ template "clearForm"}}
 
-<p id="text" class="textInfo">
+{{ template "checkoutIntervalForm"}}
+
+<p id="textExact" class="textInfo">
   {{if .Quantity}}
   Сгенерирован граф с точными весами, количество вершин = {{.Quantity}}
   {{else}}
@@ -16,6 +18,9 @@
   {{end}}
 </p>
 
-{{ template "canvasForExactGraph" }}
+{{ template "canvasForGraph" }}
+
+</body>
+</html>
 
 {{ end }}

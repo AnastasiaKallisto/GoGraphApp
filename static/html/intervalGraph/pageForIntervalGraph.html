@@ -2,11 +2,15 @@
 
 {{ template "header" }}
 
-{{ template "dropdownButtonExact" }}
+{{ template "dropdownButtonInterval" }}
 
-{{ template "formForQuantity"}}
+{{ template "quantityForm"}}
 
-<p id="text" class="textInfo">
+{{ template "clearForm"}}
+
+{{ template "checkoutExactForm"}}
+
+<p id="textInterval" class="textInfo">
     {{if .Quantity}}
     Сгенерирован граф с интервальными весами, количество вершин = {{.Quantity}}
     {{else}}
@@ -16,5 +20,8 @@
 
 {{ template "containerForIntervalGraphs" }}
 
+{{ template "formForIntervalGraphInfo"}}
+</body>
+</html>
 {{ end }}
 

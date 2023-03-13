@@ -1,0 +1,13 @@
+{{ define "checkoutIntervalForm"}}
+
+<dialog class="littleForm" id="checkoutIntervalForm">
+    <form class="form-container">
+        <p>Вы действительно закончить работу</p>
+        <p>и переключиться на интервальные веса?</p>
+        <div class="buttons-container">
+            <button type="button" class="btn-cancel" onclick='closeForm("checkoutIntervalForm")'>Нет</button>
+            <button type="submit" class="btn" name="checkoutInterval">Да</button>
+        </div>
+    </form>
+</dialog>
+{{ end}}

@@ -1,17 +1,19 @@
+{{ define "containerForIntervalGraphs"}}
+
 <div class = "container-for-interval-graphs">
   <div class = "interval-graph-in-container">
-    <img src="image1.jpg" id = "1" onclick="openIntervalGraphInfo('intervalGraphInfo', '1');">
+    <img src="image1.png" id = "1" onclick="openForm('intervalGraphInfo');">
     <div class = "inscription-for-interval-graph-in-container">Graph 1</div>
-    <div class="image-details" style="display: none;">
+    <div class="image-details">
       Graph 1
       min weight = 10
       max weight = 20
       average weight = 15</div>
   </div>
   <div class = "interval-graph-in-container">
-    <img src="image2.jpg">
-    <div style="text-align: center;">Graph 2</div>
-    <div class="interval-graph-details">
+    <img src="image2.png" id = "2" onclick="openForm('intervalGraphInfo');">
+    <div class = "inscription-for-interval-graph-in-container">Graph 2</div>
+    <div class="image-details">
       Graph 2
       min weight = 10
       max weight = 20
@@ -19,3 +21,5 @@
   </div>
   <!-- Add more picture containers here -->
 </div>
+
+{{ end }}
