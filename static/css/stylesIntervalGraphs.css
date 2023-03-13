@@ -1,0 +1,62 @@
+.container-for-interval-graphs {
+    max-width: 1250px;
+    margin-left: 260px;
+}
+
+.interval-graph-in-container {
+    display: inline-block;
+    width: 250px;
+    height: 250px;
+    padding: 5px;
+}
+
+.inscription-for-interval-graph-in-container {
+    text-align: center;
+}
+
+.interval-graph-details {
+    display: none;
+}
+
+div:hover .interval-graph-details {
+    display: block;
+}
+
+.interval-graph-info {
+    display: flex;
+    flex-wrap: wrap;
+    height: 680px;
+    width: 1200px;
+    margin: 0 auto;
+    background-color: #f2f2f2;
+}
+
+.interval-graph-info .img-container {
+    flex: 1 1 670px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.interval-graph-info .img-container img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.interval-graph-info .text-container {
+    flex: 1 1 530px;
+    overflow-y: scroll;
+    padding: 20px;
+}
+
+.interval-graph-info h2 {
+    font-size: 32px;
+    color: #333;
+    margin-top: 0;
+}
+
+.interval-graph-info p {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.5;
+}

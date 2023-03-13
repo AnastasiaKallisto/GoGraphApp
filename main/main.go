@@ -9,23 +9,23 @@ type QuantityData struct {
 	Quantity string
 }
 
-func mainPage(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("static/html/MainPage.html",
-		"static/html/canvasForExactGraph.html",
-		"static/html/dropdownButtonExact.html",
-		"static/html/headerMenu.html",
-		"static/html/formForQuantity.html")
+func exactGraphPage(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
+		"static/html/exactGraph/canvasForExactGraph.html",
+		"static/html/exactGraph/dropdownButtonExact.html",
+		"static/html/common/headerMenu.html",
+		"static/html/common/formForQuantity.html")
 	quantity := r.FormValue("quantity")
 	data := QuantityData{
 		Quantity: quantity,
 	}
-	t.ExecuteTemplate(w, "mainPage", data)
+	t.ExecuteTemplate(w, "pageForExactGraph", data)
 }
 
 func handleFunc() {
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/", mainPage)
+	http.HandleFunc("/exact", exactGraphPage)
 	http.ListenAndServe("localhost:8080", nil)
 }
 

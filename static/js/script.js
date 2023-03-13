@@ -14,7 +14,7 @@ function CruscalAlgorithm() {
 
 function Clear() {
     if (graphIsDrawn) {
-        if(alert("Вы действительно хотите очистить рабочее пространство?")){
+        if(confirm("Вы действительно хотите очистить рабочее пространство?")){
             // вызов функции из go, которая сбрасывает все массивы с графами
             // все переменные, касающиеся того, какой сейчас алгоритм выполняется
             // не трогаем только переменную, которая касается весов графа
@@ -24,17 +24,17 @@ function Clear() {
 }
 
 function ExactWeights() {
-    prompt("Вы действительно хотите переключиться на работу с точными весами?");
+    confirm("Вы действительно хотите переключиться на работу с точными весами?");
 }
 
 function IntervalWeights() {
-    prompt("Вы действительно хотите переключиться на работу с интервальными весами?");
+    confirm("Вы действительно хотите переключиться на работу с интервальными весами?");
 }
 
-function openGenerateGraphForm() {
-    document.getElementById("generateGraphForm").showModal();
+function openForm(id) {
+    document.getElementById(id).showModal();
 }
 
-function closeGenerateGraphForm() {
-    document.getElementById("generateGraphForm").close();
+function closeForm(id) {
+    document.getElementById(id).close();
 }
