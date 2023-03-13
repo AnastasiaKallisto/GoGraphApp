@@ -24,12 +24,10 @@ body{
 }
 
 .btn-close {
-    margin-right: 5px;
-    margin-top: 5px;
-    width: 25px;
-    height: 25px;
-    max-width: 25px;
-    max-height: 25px;
+    min-width: 28px;
+    min-height: 28px;
+    max-height:28px;
+    margin-right: 0;
     background-image:url('/static/img/closeIcon.png');
     cursor: pointer;
 }
