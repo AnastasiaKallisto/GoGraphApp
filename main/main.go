@@ -5,8 +5,10 @@ import (
 	"net/http"
 )
 
-type QuantityData struct {
-	Quantity string
+type Data struct {
+	Quantity       string
+	SwitchExact    bool
+	SwitchInterval bool
 }
 
 func exactGraphPage(w http.ResponseWriter, r *http.Request) {
@@ -18,10 +20,21 @@ func exactGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/exactGraph/checkoutIntervalGraphForm.html",
 		"static/html/common/quantityForm.html")
 	quantity := r.FormValue("quantity")
-	data := QuantityData{
+
+	data := Data{
 		Quantity: quantity,
 	}
 	t.ExecuteTemplate(w, "pageForExactGraph", data)
+}
+
+func switchPageHandler(w http.ResponseWriter, r *http.Request) {
+	var redirectURL string
+	if r.URL.Path == "/exact" {
+		redirectURL = "/interval"
+	} else {
+		redirectURL = "/exact"
+	}
+	http.Redirect(w, r, redirectURL, http.StatusSeeOther)
 }
 
 func intervalGraphPage(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +48,7 @@ func intervalGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/common/clearForm.html",
 		"static/html/common/quantityForm.html")
 	quantity := r.FormValue("quantity")
-	data := QuantityData{
+	data := Data{
 		Quantity: quantity,
 	}
 	t.ExecuteTemplate(w, "pageForIntervalGraph", data)
@@ -46,6 +59,7 @@ func handleFunc() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/interval", intervalGraphPage)
 	http.HandleFunc("/exact", exactGraphPage)
+	http.HandleFunc("/switch", switchPageHandler)
 	http.ListenAndServe("localhost:8080", nil)
 }
 
