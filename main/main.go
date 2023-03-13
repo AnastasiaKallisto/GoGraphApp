@@ -14,7 +14,8 @@ func exactGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/exactGraph/canvasForExactGraph.html",
 		"static/html/exactGraph/dropdownButtonExact.html",
 		"static/html/common/headerMenu.html",
-		"static/html/common/formForQuantity.html")
+		"static/html/common/clearForm.html",
+		"static/html/common/quantityForm.html")
 	quantity := r.FormValue("quantity")
 	data := QuantityData{
 		Quantity: quantity,

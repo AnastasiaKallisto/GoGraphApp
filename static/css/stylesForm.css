@@ -1,4 +1,4 @@
-.formGenerateGraph .btn {
+.littleForm .btn {
     background-color: #F3E2A9;
     font-family: "Palatino Linotype", serif;
     width: 45%;
@@ -11,7 +11,7 @@
     opacity: 0.9;
 }
 
-.formGenerateGraph .btn-cancel {
+.littleForm .btn-cancel {
     background-color: #ff9782;
     font-family: "Palatino Linotype", serif;
     width: 45%;
@@ -24,7 +24,7 @@
     opacity: 0.9;
 }
 
-.formGenerateGraph {
+.littleForm {
     position: absolute;
     height: 140px;
     width: 350px;
@@ -37,8 +37,14 @@
     background-color: white;
 }
 
+.littleForm p{
+    text-align: center;
+    margin-top: 0.5em; /* Отступ сверху */
+    margin-bottom: 0.5em; /* Отступ снизу */
+}
+
 .form-container {
-    padding: 10px;
+    padding: 5px;
 }
 
 .form-container .btn:hover, .btn-cancel:hover {
@@ -54,7 +60,7 @@
 }
 
 .form-container .inputQuantity {
-    padding-top: 2px;
+    margin-top: 10px;
     width: 100%;
     text-align: center;
     border: 1px solid gray;

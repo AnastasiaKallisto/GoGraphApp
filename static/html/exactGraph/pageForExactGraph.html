@@ -6,6 +6,8 @@
 
 {{ template "formForQuantity"}}
 
+{{ template "clearForm"}}
+
 <p id="text" class="textInfo">
   {{if .Quantity}}
   Сгенерирован граф с точными весами, количество вершин = {{.Quantity}}
