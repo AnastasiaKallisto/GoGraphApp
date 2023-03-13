@@ -17,18 +17,3 @@ function openForm(id) {
 function closeForm(id) {
     document.getElementById(id).close();
 }
-
-function switchPage() {
-    var currentUrl = window.location.href;
-    console.log(currentUrl);
-    var newUrl = '';
-
-    if (currentUrl.indexOf('/interval') !== -1) {
-        newUrl = currentUrl.replace('/interval', '/exact');
-    } else {
-        newUrl = currentUrl.replace('/exact', '/interval');
-    }
-    console.log(newUrl);
-    window.location.href = newUrl;
-    console.log(window.location.href);
-}

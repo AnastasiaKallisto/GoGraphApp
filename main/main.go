@@ -17,7 +17,6 @@ func exactGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/exactGraph/dropdownButtonExact.html",
 		"static/html/common/headerMenu.html",
 		"static/html/common/clearForm.html",
-		"static/html/exactGraph/checkoutIntervalGraphForm.html",
 		"static/html/common/quantityForm.html")
 	quantity := r.FormValue("quantity")
 
@@ -42,7 +41,6 @@ func intervalGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/intervalGraph/pageForIntervalGraph.html",
 		"static/html/intervalGraph/containerForIntervalGraphs.html",
 		"static/html/intervalGraph/dropdownButtonInterval.html",
-		"static/html/intervalGraph/checkoutExactGraphForm.html",
 		"static/html/intervalGraph/formForIntervalGraphInfo.html",
 		"static/html/common/headerMenu.html",
 		"static/html/common/clearForm.html",

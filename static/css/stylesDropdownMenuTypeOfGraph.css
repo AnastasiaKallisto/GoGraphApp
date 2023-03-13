@@ -25,14 +25,16 @@
     position: absolute;
     background-color: #F3E2A9;
     width: 250px;
+    height: 40px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
 
 /* Ссылки внутри выпадающего списка */
-.dropdown-content button {
+.dropdown-a {
     color: black;
     width: 250px;
+    text-align: center;
     font-family: "Palatino Linotype", serif;
     padding: 12px 16px;
     background-color: #F3E2A9;
@@ -43,7 +45,7 @@
 }
 
 /* Изменение цвета выпадающих ссылок при наведении курсора */
-.dropdown-content button:hover {
+.dropdown-a:hover {
     background-color: #F3D59B;
     border: none;
 }
