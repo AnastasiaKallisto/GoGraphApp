@@ -1,8 +1,39 @@
-class Point {
+class Vertex {
     constructor(x, y, number) {
-        this.X = x;
-        this.Y = y;
-        this.Number = number;
+        this.x = x;
+        this.y = y;
+        this.number = number;
+    }
+}
+
+class ExactEdge {
+    constructor(a, b, weight) {
+        this.a = a;
+        this.b = b;
+        this.weight = weight;
+    }
+}
+
+class ExactGraph {
+
+    constructor(vertices, edges) {
+        this.vertices = [];
+        this.edges = [];
+
+        for (let i = 0; i < vertices.length; ++i) {
+            this.vertices[i] = vertices[i];
+        }
+        for (let i = 0; i < edges.length; ++i) {
+            this.edges[i] = edges[i];
+        }
+    }
+
+    addVertex(vertex) {
+        this.vertices.push(vertex);
+    }
+
+    addEdge(edge) {
+        this.edges.push(edge);
     }
 }
 
