@@ -90,7 +90,7 @@ func handleFunc() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/interval", intervalGraphPage)
 	http.HandleFunc("/exact", exactGraphPage)
-	http.HandleFunc("/exact", drawGraph)
+	http.HandleFunc("/exact/draw", drawGraph)
 	http.ListenAndServe("localhost:8080", nil)
 }
 

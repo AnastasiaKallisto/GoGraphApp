@@ -1,8 +1,8 @@
 package ExactGraph
 
 type Graph struct {
-	Edges    []Edge
-	Vertices []Vertex
+	Edges    []Edge   `json:"edges"`
+	Vertices []Vertex `json:"vertices"`
 }
 
 func NewGraph() *Graph {

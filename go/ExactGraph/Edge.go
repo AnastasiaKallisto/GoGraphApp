@@ -1,9 +1,9 @@
 package ExactGraph
 
 type Edge struct {
-	A      Vertex
-	B      Vertex
-	Weight float64
+	A      Vertex  `json:"a"`
+	B      Vertex  `json:"b"`
+	Weight float64 `json:"weight"`
 }
 
 func NewEdge(a Vertex, b Vertex, w float64) *Edge {

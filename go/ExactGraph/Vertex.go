@@ -1,9 +1,9 @@
 package ExactGraph
 
 type Vertex struct {
-	Number int
-	X      int
-	Y      int
+	Number int `json:"Number"`
+	X      int `json:"x"`
+	Y      int `json:"y"`
 }
 
 func (g *Graph) AddVertex(v Vertex) bool {
