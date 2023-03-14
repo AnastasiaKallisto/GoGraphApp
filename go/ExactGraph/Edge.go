@@ -1,4 +1,4 @@
-package main
+package ExactGraph
 
 type Edge struct {
 	A      Vertex
