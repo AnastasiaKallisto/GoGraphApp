@@ -1,18 +1,20 @@
-package ExactGraph
+package main
 
 type Edge struct {
-	vertices []Vertex
-	weight   int
+	A      Vertex
+	B      Vertex
+	Weight float64
 }
 
-func NewEdge(a Vertex, b Vertex, w int) *Edge {
+func NewEdge(a Vertex, b Vertex, w float64) *Edge {
 	return &Edge{
-		vertices: []Vertex{a, b},
-		weight:   w,
+		A:      a,
+		B:      b,
+		Weight: w,
 	}
 }
 
-func (g *Graph) AddEdgeInVertexFormat(a Vertex, b Vertex, weight int) bool {
+func (g *Graph) AddEdgeInVertexFormat(a Vertex, b Vertex, weight float64) bool {
 	return g.AddEdge(NewEdge(a, b, weight))
 }
 
@@ -21,13 +23,13 @@ func (g *Graph) AddEdge(e *Edge) bool {
 	if g.ContainsEdge(e) {
 		return false
 	}
-	g.edges = append(g.edges, *e)
+	g.Edges = append(g.Edges, *e)
 	return true
 }
 
 // ContainsEdge проверяет, не содержит ли уже граф ребро, соединяющее те же самые вершины
 func (g *Graph) ContainsEdge(e *Edge) bool {
-	for _, edge := range g.edges {
+	for _, edge := range g.Edges {
 		if edge.isEqual(e) {
 			return true
 		}
@@ -36,7 +38,7 @@ func (g *Graph) ContainsEdge(e *Edge) bool {
 }
 
 func (e *Edge) isEqual(o *Edge) bool {
-	return noOrderEqual(e.vertices, o.vertices)
+	return noOrderEqual([]Vertex{e.A, e.B}, []Vertex{o.A, o.B})
 }
 
 func noOrderEqual(a []Vertex, b []Vertex) bool {
@@ -60,6 +62,6 @@ func noOrderEqual(a []Vertex, b []Vertex) bool {
 	return true
 }
 
-func (e *Edge) CompareTo(o *Edge) int {
-	return e.weight - o.weight
+func (e *Edge) CompareTo(o *Edge) float64 {
+	return e.Weight - o.Weight
 }
