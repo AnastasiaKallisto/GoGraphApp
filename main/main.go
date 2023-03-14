@@ -217,8 +217,6 @@ func drawGraph(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	fmt.Println(graph)
-
 	t.ExecuteTemplate(w, "pageForExactGraph", data)
 	fmt.Fprintf(w, "<script>\n"+
 		"var graph = %s;\n"+

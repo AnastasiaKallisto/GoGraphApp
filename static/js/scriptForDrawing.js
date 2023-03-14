@@ -16,7 +16,7 @@ class ExactEdge {
 
 class ExactGraph {
 
-    constructor(vertices, edges) {
+    constructor(edges, vertices) {
         this.vertices = [];
         this.edges = [];
 
