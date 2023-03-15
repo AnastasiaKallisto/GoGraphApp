@@ -57,7 +57,9 @@ function drawGraph(graph) {
   //   ctx.fill();
   // });
     ctx.beginPath();
-    ctx.fillStyle = 'red';
-    ctx.fillRect(50, 50, 100, 100);
+    ctx.moveTo(10, 50);
+    ctx.lineTo(150, 50);
+    ctx.strokeStyle = 'green';
+    ctx.lineWidth = 5;
     ctx.stroke();
 }
