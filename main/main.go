@@ -198,9 +198,9 @@ func drawGraph(w http.ResponseWriter, r *http.Request) {
 		Quantity: quantity,
 	}
 
-	vertex1 := Vertex{1, 100, 200}
-	vertex2 := Vertex{2, 200, 300}
-	vertex3 := Vertex{3, 400, 100}
+	vertex1 := Vertex{0, 100, 200}
+	vertex2 := Vertex{1, 200, 300}
+	vertex3 := Vertex{2, 400, 100}
 
 	// Create edges
 	edge1 := Edge{vertex1, vertex2, 16.5}
