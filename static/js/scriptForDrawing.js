@@ -63,8 +63,8 @@ function generateVertices(n, sizeFrameX, sizeFrameY, graph) {
 }
 
 function drawGraph(graph) {
-  var canvas = document.getElementById('canvasForGraph');
-  var ctx = canvas.getContext('2d');
+  let canvas = document.getElementById('canvasForGraph');
+  let ctx = canvas.getContext('2d');
     generateVertices(graph.vertices.length, canvas.clientWidth, canvas.clientHeight, graph)
     // граф
     // Ребра
@@ -86,6 +86,59 @@ function drawGraph(graph) {
       ctx.arc(vertex.x, vertex.y, 2, 0, 2*Math.PI);
       ctx.fillText("V" + vertex.number, vertex.x+5, vertex.y+15);
       ctx.fill();
+    });
+}
+
+function drawPrimTree(graph) {
+    document.getElementById("textGraph").value = "kekeke";
+    let canvas = document.getElementById('canvasForGraph');
+    let ctx = canvas.getContext('2d');
+    generateVertices(graph.vertices.length, canvas.clientWidth, canvas.clientHeight, graph)
+    // граф
+    // Ребра
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 1;
+    ctx.font = "12px serif";
+    ctx.fillStyle = 'blue';
+    graph.edges.forEach(function(edge) {
+        ctx.beginPath();
+        ctx.moveTo(edge.a.x +2, edge.a.y+2);
+        ctx.lineTo(edge.b.x+2, edge.b.y+2);
+        ctx.stroke();
+        ctx.fillText( edge.weight, Math.round((edge.a.x+edge.b.x)*0.5)-10, Math.round((edge.a.y+edge.b.y)*0.5)-10);
+    });
+    // Вершины
+    ctx.fillStyle = 'blue';
+    graph.vertices.forEach(function(vertex) {
+        ctx.beginPath();
+        ctx.arc(vertex.x+2, vertex.y+2, 2, 0, 2*Math.PI);
+        ctx.fill();
+    });
+}
+
+function drawCruscalTree(graph) {
+    let canvas = document.getElementById('canvasForGraph');
+    let ctx = canvas.getContext('2d');
+    generateVertices(graph.vertices.length, canvas.clientWidth, canvas.clientHeight, graph)
+    // граф
+    // Ребра
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 1;
+    ctx.font = "12px serif";
+    ctx.fillStyle = 'red';
+    graph.edges.forEach(function(edge) {
+        ctx.beginPath();
+        ctx.moveTo(edge.a.x -2, edge.a.y-2);
+        ctx.lineTo(edge.b.x-2, edge.b.y-2);
+        ctx.stroke();
+        ctx.fillText( edge.weight, Math.round((edge.a.x+edge.b.x)*0.5)-10, Math.round((edge.a.y+edge.b.y)*0.5)-10);
+    });
+    // Вершины
+    ctx.fillStyle = 'blue';
+    graph.vertices.forEach(function(vertex) {
+        ctx.beginPath();
+        ctx.arc(vertex.x-2, vertex.y-2, 2, 0, 2*Math.PI);
+        ctx.fill();
     });
 }
 

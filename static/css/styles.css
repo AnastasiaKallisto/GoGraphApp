@@ -32,3 +32,10 @@ body{
     background-image:url('/static/img/closeIcon.png');
     cursor: pointer;
 }
+
+.textView {
+    width : 90%;
+    height: 25%;
+    margin-left: 20px;
+    margin-top: 20px;
+}

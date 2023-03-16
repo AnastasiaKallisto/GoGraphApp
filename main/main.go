@@ -349,14 +349,31 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+	primJson, err := json.Marshal(Prim(*graph))
+	if err != nil {
+		panic(err)
+	}
+	cruscalJson, err := json.Marshal(Prim(*graph))
+	if err != nil {
+		panic(err)
+	}
 	t.ExecuteTemplate(w, "pageForExactGraph", data)
 	fmt.Fprintf(w, "<script>\n"+
 		"var graph = %s;\n"+
-		"drawGraph(graph);\n"+
-		"</script>\n"+
-		"</body>\n"+
-		"</html>", graphJson)
-	fmt.Println(quantity)
+		"drawGraph(graph);\n", graphJson)
+	fmt.Fprintf(w,
+		"var primGraph = %s;\n"+
+			"drawPrimTree(primGraph);\n", primJson)
+	fmt.Fprintf(w,
+		"var cruscalGraph = %s;\n"+
+			"drawCruscalTree(cruscalGraph);\n", cruscalJson)
+	fmt.Fprintf(w,
+		"document.getElementById('textGraph').value = '%s';\n"+
+			"document.getElementById('MSTPrim').value = '%s';\n"+
+			"document.getElementById('MSTCruscal').value = '%s';\n"+
+			"</script>\n"+
+			"</body>\n"+
+			"</html>", graphJson, primJson, cruscalJson)
 }
 
 func getExactGraphFromFilePage(w http.ResponseWriter, r *http.Request) {
