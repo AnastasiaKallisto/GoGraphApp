@@ -16,8 +16,8 @@ var graph *ExactGraph
 var typeOfGraph string   // "exact" "interval"
 var sourceOfGraph string // "generate" "fromFile"
 var quantity int         // число
-var MSTPrimExact ExactGraph
-var MSTCruscal ExactGraph
+var MSTPrimExact *ExactGraph
+var MSTCruscalExact *ExactGraph
 
 //var arrayMSTPrimInterval []*IntervalGraph
 //var arrayMSTCruscalInterval []*IntervalGraph
@@ -179,12 +179,14 @@ func createRandomGraph(n int) *ExactGraph {
 	quantityOfActedVertices := 2
 	firstNumber, secondNumber := 0, 0
 
+	actedNumbersOfVertices := []int{0, 1}
 	g.AddEdgeInVertexFormat(g.Vertices[0], g.Vertices[1], float64(rand.Intn(100)+1))
 
-	for quantityOfActedVertices < n-1 {
-		firstNumber = rand.Intn(quantityOfActedVertices)
-		quantityOfActedVertices++
+	for quantityOfActedVertices < n {
+		firstNumber = actedNumbersOfVertices[rand.Intn(quantityOfActedVertices)]
 		secondNumber = quantityOfActedVertices
+		quantityOfActedVertices++
+		actedNumbersOfVertices = append(actedNumbersOfVertices, secondNumber)
 		g.AddEdgeInVertexFormat(g.Vertices[firstNumber], g.Vertices[secondNumber], float64(rand.Intn(100)+1))
 	}
 
@@ -209,12 +211,10 @@ func containsVertex(vertices []Vertex, a Vertex) bool {
 	return false
 }
 
-func Prim(g ExactGraph) ExactGraph {
+func Prim(g ExactGraph) *ExactGraph {
+
 	// будущее минимальное остовное дерево
-	MSTPrimExact = ExactGraph{
-		Edges:    []ExactEdge{},
-		Vertices: []Vertex{},
-	}
+	MSTPrimExact = NewGraph()
 
 	// создадим отображение номеров посещенных вершин к факту их посещения
 	visited := make(map[int]bool)
@@ -279,13 +279,19 @@ type Data struct {
 }
 
 func exactGraphPage(w http.ResponseWriter, r *http.Request) {
+	graph = nil
+	sourceOfGraph = ""
+	quantity = 0
+	MSTPrimExact = nil
+	MSTCruscalExact = nil
 	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
 		"static/html/common/canvasForGraph.html",
 		"static/html/exactGraph/dropdownButtonExact.html",
 		"static/html/exactGraph/uploadExactFileForm.html",
 		"static/html/common/headerMenu.html",
-		"static/html/common/clearForm.html",
-		"static/html/common/quantityForm.html")
+		"static/html/exactGraph/exactClearForm.html",
+		"static/html/exactGraph/exactQuantityForm.html",
+	)
 	quantity := r.FormValue("quantity")
 
 	data := Data{
@@ -304,8 +310,8 @@ func intervalGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/intervalGraph/dropdownButtonInterval.html",
 		"static/html/intervalGraph/formForIntervalGraphInfo.html",
 		"static/html/common/headerMenu.html",
-		"static/html/common/clearForm.html",
-		"static/html/common/quantityForm.html")
+		"static/html/intervalGraph/intervalClearForm.html",
+		"static/html/intervalGraph/intervalQuantityForm.html")
 	quantity := r.FormValue("quantity")
 	data := Data{
 		Quantity: quantity,
@@ -313,14 +319,14 @@ func intervalGraphPage(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "pageForIntervalGraph", data)
 }
 
-func generateExactGraph(w http.ResponseWriter, r *http.Request) {
+func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
 		"static/html/common/canvasForGraph.html",
 		"static/html/exactGraph/dropdownButtonExact.html",
 		"static/html/exactGraph/uploadExactFileForm.html",
 		"static/html/common/headerMenu.html",
-		"static/html/common/clearForm.html",
-		"static/html/common/quantityForm.html")
+		"static/html/exactGraph/exactClearForm.html",
+		"static/html/exactGraph/exactQuantityForm.html")
 	quantity := r.FormValue("quantity")
 	data := Data{
 		Quantity: quantity,
@@ -345,15 +351,15 @@ func generateExactGraph(w http.ResponseWriter, r *http.Request) {
 		"</html>", graphJson)
 }
 
-func getExactGraphFromFile(w http.ResponseWriter, r *http.Request) {
+func getExactGraphFromFilePage(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
 		"static/html/common/canvasForGraph.html",
 		"static/html/exactGraph/dropdownButtonExact.html",
 		"static/html/exactGraph/uploadExactFileForm.html",
 		"static/html/common/headerMenu.html",
-		"static/html/common/clearForm.html",
-		"static/html/common/quantityForm.html")
-	file, _, err := r.FormFile("file")
+		"static/html/exactGraph/exactClearForm.html",
+		"static/html/exactGraph/exactQuantityForm.html")
+	file, _, err := r.FormFile("exactGraphTxtFile")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -388,8 +394,8 @@ func handleFunc() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/interval", intervalGraphPage)
 	http.HandleFunc("/exact", exactGraphPage)
-	http.HandleFunc("/exact/generate", generateExactGraph)
-	http.HandleFunc("/exact/from-file", getExactGraphFromFile)
+	http.HandleFunc("/exact/generate", generateExactGraphPage)
+	http.HandleFunc("/exact/from-file", getExactGraphFromFilePage)
 	http.ListenAndServe("localhost:8080", nil)
 }
 

@@ -1,5 +1,5 @@
 {{ define "uploadExactFileForm"}}
-<dialog class="littleForm" height="300px" id="uploadGraph">
+<dialog class="littleForm" id="uploadGraph">
   <form>
     <p>Выберите .txt файл, формат записи:
       1 строка) количество вершин,
@@ -10,7 +10,14 @@
       1 2 10
       2 3 16.5</p>
     <input type="file" id="txtFile" accept=".txt" name="exactGraphTxtFile">
-    <button type="submit" onclick="uploadFile()">Upload</button>
+    <a class="btn" id="uploadExactFile" href="/exact/from-file?exactGraphTxtFile="> Загрузить</a>
   </form>
 </dialog>
+<script>
+  document.getElementById("uploadExactFile").onclick = function() {
+    this.setAttribute('href', this.getAttribute('href')
+            .concat(document.getElementById("txtFile").value));
+  }
+</script>
+
 {{end}}

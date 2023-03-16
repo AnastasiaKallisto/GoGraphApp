@@ -1,6 +1,8 @@
 .littleForm .btn {
     background-color: #F3E2A9;
     font-family: "Palatino Linotype", serif;
+    text-decoration: none;
+    color:black;
     width: 45%;
     height: 30px;
     font-size: 13px;

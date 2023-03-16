@@ -16,9 +16,9 @@
 <body>
 <div id="menu">
   <ul>
-    <a id="menuItem1" onclick="UploadGraphFromFile('uploadGraph')" href='/exact/from-file'>Загрузить граф из файла</a>
-    <a id="menuItem2" onclick='openForm("setQuantityForm")' href='/exact/generate'>Сгенерировать граф</a>
-    <li id="menuItem3" onclick ="PrimAlgorithm()" >Алгоритм Прима</li>
+    <li id="menuItem1" onclick="openForm('uploadGraph')">Загрузить граф из файла</li>
+    <li id="menuItem2" onclick='openForm("setQuantityForm")'>Сгенерировать граф</li>
+    <li> <a id="menuItem3" class = "primButton" onclick ="PrimAlgorithm('menuItem3')" >Алгоритм Прима </a></li>
     <li id="menuItem4" onclick="CruscalAlgorithm()">Алгоритм Краскала</li>
     <li id="menuItem5" onclick="openForm('clearForm')">Очистить</li>
   </ul>
