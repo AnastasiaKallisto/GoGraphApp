@@ -87,3 +87,5 @@ function drawGraph(graph) {
       ctx.fill();
     });
 }
+
+

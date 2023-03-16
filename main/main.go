@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"math/rand"
 	"net/http"
+	"strconv"
 )
 
 type Vertex struct {
@@ -106,6 +107,8 @@ type ExactGraph struct {
 	Vertices []Vertex `json:"vertices"`
 }
 
+var graph *ExactGraph
+
 func NewGraph() *ExactGraph {
 	return &ExactGraph{
 		Edges:    []Edge{},
@@ -115,7 +118,7 @@ func NewGraph() *ExactGraph {
 
 func createRandomGraph(n int) *ExactGraph {
 	g := NewGraph()
-	if n < 4 {
+	if n < 3 {
 		return nil
 	}
 	for i := 0; i < n; i++ {
@@ -127,8 +130,8 @@ func createRandomGraph(n int) *ExactGraph {
 
 	g.AddEdgeInVertexFormat(g.Vertices[1], g.Vertices[2], float64(rand.Intn(100)+1))
 
-	for quantityOfActedVertices < n {
-		firstNumber = rand.Intn(quantityOfActedVertices) + 1
+	for quantityOfActedVertices < n-1 {
+		firstNumber = rand.Intn(quantityOfActedVertices)
 		quantityOfActedVertices++
 		secondNumber = quantityOfActedVertices
 		g.AddEdgeInVertexFormat(g.Vertices[firstNumber], g.Vertices[secondNumber], float64(rand.Intn(100)+1))
@@ -136,8 +139,8 @@ func createRandomGraph(n int) *ExactGraph {
 
 	randomQuantity := rand.Intn(2*n) + 1
 	for i := 1; i < randomQuantity; i++ {
-		firstNumber = rand.Intn(n) + 1
-		secondNumber = rand.Intn(n) + 1
+		firstNumber = rand.Intn(n)
+		secondNumber = rand.Intn(n)
 		if firstNumber != secondNumber {
 			g.AddEdgeInVertexFormat(g.Vertices[firstNumber], g.Vertices[secondNumber], float64(rand.Intn(100)+1))
 		}
@@ -197,19 +200,9 @@ func drawGraph(w http.ResponseWriter, r *http.Request) {
 	data := Data{
 		Quantity: quantity,
 	}
-
-	vertex1 := Vertex{0, 100, 200}
-	vertex2 := Vertex{1, 200, 300}
-	vertex3 := Vertex{2, 400, 100}
-
-	// Create edges
-	edge1 := Edge{vertex1, vertex2, 16.5}
-	edge2 := Edge{vertex2, vertex3, 21.5}
-
-	// Create graph
-	graph := ExactGraph{
-		Vertices: []Vertex{vertex1, vertex2, vertex3},
-		Edges:    []Edge{edge1, edge2},
+	n, _ := strconv.Atoi(quantity)
+	if graph == nil {
+		graph = createRandomGraph(n)
 	}
 
 	graphJson, err := json.Marshal(graph)
