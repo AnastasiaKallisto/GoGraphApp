@@ -15,7 +15,7 @@ import (
 var graph *ExactGraph
 var typeOfGraph string   // "exact" "interval"
 var sourceOfGraph string // "generate" "fromFile"
-var quantity int         // число
+var quantity string      // число
 var MSTPrimExact *ExactGraph
 var MSTCruscalExact *ExactGraph
 
@@ -281,7 +281,7 @@ type Data struct {
 func exactGraphPage(w http.ResponseWriter, r *http.Request) {
 	graph = nil
 	sourceOfGraph = ""
-	quantity = 0
+	quantity = ""
 	MSTPrimExact = nil
 	MSTCruscalExact = nil
 	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
@@ -311,7 +311,8 @@ func intervalGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/intervalGraph/formForIntervalGraphInfo.html",
 		"static/html/common/headerMenu.html",
 		"static/html/intervalGraph/intervalClearForm.html",
-		"static/html/intervalGraph/intervalQuantityForm.html")
+		"static/html/intervalGraph/intervalQuantityForm.html",
+		"static/html/intervalGraph/uploadIntervalFileForm.html")
 	quantity := r.FormValue("quantity")
 	data := Data{
 		Quantity: quantity,
@@ -327,21 +328,27 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/common/headerMenu.html",
 		"static/html/exactGraph/exactClearForm.html",
 		"static/html/exactGraph/exactQuantityForm.html")
-	quantity := r.FormValue("quantity")
-	data := Data{
-		Quantity: quantity,
+	data := Data{}
+	fmt.Println(quantity)
+	if quantity != "" {
+		data = Data{
+			Quantity: quantity,
+		}
+	} else {
+		quantity = r.FormValue("quantity")
+		data = Data{
+			Quantity: quantity,
+		}
+		n, _ := strconv.Atoi(quantity)
+		if graph == nil {
+			graph = createRandomGraph(n)
+			sourceOfGraph = "generate"
+		}
 	}
-	n, _ := strconv.Atoi(quantity)
-	if graph == nil {
-		graph = createRandomGraph(n)
-		sourceOfGraph = "generate"
-	}
-
 	graphJson, err := json.Marshal(graph)
 	if err != nil {
 		panic(err)
 	}
-
 	t.ExecuteTemplate(w, "pageForExactGraph", data)
 	fmt.Fprintf(w, "<script>\n"+
 		"var graph = %s;\n"+
@@ -349,6 +356,7 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 		"</script>\n"+
 		"</body>\n"+
 		"</html>", graphJson)
+	fmt.Println(quantity)
 }
 
 func getExactGraphFromFilePage(w http.ResponseWriter, r *http.Request) {

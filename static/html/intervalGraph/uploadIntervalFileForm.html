@@ -1,0 +1,23 @@
+{{ define "uploadIntervalFileForm"}}
+<dialog class="littleForm" id="uploadGraph">
+  <form>
+    <p>Выберите .txt файл, формат записи:
+      1 строка) количество вершин,
+      2 и последующие строки) номер вершины 1, номер вершины 2, мин. вес ребра, макс. вес ребра
+      Если вы используете вес double, то запись должна быть через точку
+      Например, граф с тремя вершинами и двумя ребрами может выглядеть так:
+      3
+      1 2 10 14
+      2 3 16.5 20</p>
+    <input type="file" id="txtFile" accept=".txt" name="exactGraphTxtFile">
+    <a class="btn" id="uploadIntervalFile" href="/interval/from-file?intervalGraphTxtFile=">Загрузить</a>
+  </form>
+</dialog>
+<script>
+  document.getElementById("uploadIntervalFile").onclick = function() {
+    this.setAttribute('href', this.getAttribute('href')
+            .concat(document.getElementById("txtFile").value));
+  }
+</script>
+
+{{end}}

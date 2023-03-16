@@ -69,7 +69,8 @@ div:hover .interval-graph-details {
     max-height: 100%;
 }
 
-.interval-graph-info .text-container {
+.text-container {
+    padding-left: 20px;
     width: 450px;
     overflow-y: scroll;
     margin-left: 20px;
