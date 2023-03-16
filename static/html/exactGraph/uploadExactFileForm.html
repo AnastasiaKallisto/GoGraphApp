@@ -1,0 +1,16 @@
+{{ define "uploadExactFileForm"}}
+<dialog class="littleForm" height="300px" id="uploadGraph">
+  <form>
+    <p>Выберите .txt файл, формат записи:
+      1 строка) количество вершин,
+      2 и последующие строки) номер вершины 1, номер вершины 2, точный вес ребра
+      Если вы используете вес double, то запись должна быть через точку
+      Например, граф с тремя вершинами и двумя ребрами может выглядеть так:
+      3
+      1 2 10
+      2 3 16.5</p>
+    <input type="file" id="txtFile" accept=".txt" name="exactGraphTxtFile">
+    <button type="submit" onclick="uploadFile()">Upload</button>
+  </form>
+</dialog>
+{{end}}

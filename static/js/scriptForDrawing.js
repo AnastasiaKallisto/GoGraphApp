@@ -71,12 +71,13 @@ function drawGraph(graph) {
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 1;
     ctx.font = "12px serif";
-    console.log(graph);
+    ctx.fillStyle = 'gray';
     graph.edges.forEach(function(edge) {
       ctx.beginPath();
       ctx.moveTo(edge.a.x, edge.a.y);
       ctx.lineTo(edge.b.x, edge.b.y);
       ctx.stroke();
+        ctx.fillText( edge.weight, Math.round((edge.a.x+edge.b.x)*0.5)-10, Math.round((edge.a.y+edge.b.y)*0.5)-10);
     });
     // Вершины
     ctx.fillStyle = 'black';

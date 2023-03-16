@@ -4,10 +4,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
+	"math"
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 )
+
+var graph *ExactGraph
+var typeOfGraph string   // "exact" "interval"
+var sourceOfGraph string // "generate" "fromFile"
+var quantity int         // число
+var MSTPrimExact ExactGraph
+var MSTCruscal ExactGraph
+
+//var arrayMSTPrimInterval []*IntervalGraph
+//var arrayMSTCruscalInterval []*IntervalGraph
 
 type Vertex struct {
 	Number int `json:"number"`
@@ -36,14 +49,14 @@ func (v1 Vertex) isEqual(v2 Vertex) bool {
 	return v1.Number == v2.Number
 }
 
-type Edge struct {
+type ExactEdge struct {
 	A      Vertex  `json:"a"`
 	B      Vertex  `json:"b"`
 	Weight float64 `json:"weight"`
 }
 
-func NewEdge(a Vertex, b Vertex, w float64) *Edge {
-	return &Edge{
+func NewEdge(a Vertex, b Vertex, w float64) *ExactEdge {
+	return &ExactEdge{
 		A:      a,
 		B:      b,
 		Weight: w,
@@ -55,7 +68,7 @@ func (g *ExactGraph) AddEdgeInVertexFormat(a Vertex, b Vertex, weight float64) b
 }
 
 // AddEdge добавляет ребро в граф, если там уже не было ребра, соединяющего эти вершины
-func (g *ExactGraph) AddEdge(e *Edge) bool {
+func (g *ExactGraph) AddEdge(e *ExactEdge) bool {
 	if g.ContainsEdge(e) {
 		return false
 	}
@@ -64,7 +77,7 @@ func (g *ExactGraph) AddEdge(e *Edge) bool {
 }
 
 // ContainsEdge проверяет, не содержит ли уже граф ребро, соединяющее те же самые вершины
-func (g *ExactGraph) ContainsEdge(e *Edge) bool {
+func (g *ExactGraph) ContainsEdge(e *ExactEdge) bool {
 	for _, edge := range g.Edges {
 		if edge.isEqual(e) {
 			return true
@@ -73,7 +86,7 @@ func (g *ExactGraph) ContainsEdge(e *Edge) bool {
 	return false
 }
 
-func (e *Edge) isEqual(o *Edge) bool {
+func (e *ExactEdge) isEqual(o *ExactEdge) bool {
 	return noOrderEqual([]Vertex{e.A, e.B}, []Vertex{o.A, o.B})
 }
 
@@ -98,22 +111,60 @@ func noOrderEqual(a []Vertex, b []Vertex) bool {
 	return true
 }
 
-func (e *Edge) CompareTo(o *Edge) float64 {
+func (e *ExactEdge) CompareTo(o *ExactEdge) float64 {
 	return e.Weight - o.Weight
 }
 
 type ExactGraph struct {
-	Edges    []Edge   `json:"edges"`
-	Vertices []Vertex `json:"vertices"`
+	Edges    []ExactEdge `json:"edges"`
+	Vertices []Vertex    `json:"vertices"`
 }
-
-var graph *ExactGraph
 
 func NewGraph() *ExactGraph {
 	return &ExactGraph{
-		Edges:    []Edge{},
+		Edges:    []ExactEdge{},
 		Vertices: []Vertex{},
 	}
+}
+
+func createGraphFromFile(content string) (*ExactGraph, error) {
+	graph := NewGraph()
+	lines := strings.Split(content, "\n")
+	quantity, err := strconv.Atoi(strings.TrimSpace(lines[0]))
+	if err != nil {
+		return nil, fmt.Errorf("invalid content format: %v", err)
+	}
+	if quantity > len(lines)-2 {
+		return nil, fmt.Errorf("invalid content format: quantity of edges must me >= %v", quantity)
+	}
+	for i := 1; i < len(lines); i++ {
+		data := strings.Split(lines[i], " ")
+		if len(data) != 3 {
+			return nil, fmt.Errorf("invalid content format: in line must be number1, number2 and weight, not this %v", data)
+		}
+		number1, err := strconv.Atoi(strings.TrimSpace(data[0]))
+		if err != nil {
+			return nil, fmt.Errorf("invalid content format: %v", err)
+		}
+		number2, err := strconv.Atoi(strings.TrimSpace(data[1]))
+		if err != nil {
+			return nil, fmt.Errorf("invalid content format: %v", err)
+		}
+		weight, err := strconv.ParseFloat(strings.TrimSpace(data[2]), 64)
+		if err != nil {
+			return nil, fmt.Errorf("invalid content format: %v", err)
+		}
+		vertex1 := Vertex{
+			Number: number1,
+		}
+		vertex2 := Vertex{
+			Number: number2,
+		}
+		graph.AddVertex(vertex1)
+		graph.AddVertex(vertex2)
+		graph.AddEdgeInVertexFormat(vertex1, vertex2, weight)
+	}
+	return graph, nil
 }
 
 func createRandomGraph(n int) *ExactGraph {
@@ -128,7 +179,7 @@ func createRandomGraph(n int) *ExactGraph {
 	quantityOfActedVertices := 2
 	firstNumber, secondNumber := 0, 0
 
-	g.AddEdgeInVertexFormat(g.Vertices[1], g.Vertices[2], float64(rand.Intn(100)+1))
+	g.AddEdgeInVertexFormat(g.Vertices[0], g.Vertices[1], float64(rand.Intn(100)+1))
 
 	for quantityOfActedVertices < n-1 {
 		firstNumber = rand.Intn(quantityOfActedVertices)
@@ -149,16 +200,89 @@ func createRandomGraph(n int) *ExactGraph {
 	return g
 }
 
+func containsVertex(vertices []Vertex, a Vertex) bool {
+	for _, vertex := range vertices {
+		if vertex == a {
+			return true
+		}
+	}
+	return false
+}
+
+func Prim(g ExactGraph) ExactGraph {
+	// будущее минимальное остовное дерево
+	MSTPrimExact = ExactGraph{
+		Edges:    []ExactEdge{},
+		Vertices: []Vertex{},
+	}
+
+	// создадим отображение номеров посещенных вершин к факту их посещения
+	visited := make(map[int]bool)
+	// Первая вершина с индексом 0
+	startingVertex := g.Vertices[0]
+	// Теперь она посещенная
+	visited[startingVertex.Number] = true
+	// и она есть в списке вершин минимального остовного дерева
+	MSTPrimExact.Vertices = append(MSTPrimExact.Vertices, startingVertex)
+
+	// Пока не посетим все вершины
+	for len(visited) < len(g.Vertices) {
+		// Будем искать ребро минимального веса, соединяющее посещенную и непосещенную вершину
+		// Установим максимальный вес, а с вершинами разберемся позже
+		minEdge := ExactEdge{
+			Weight: math.MaxFloat64,
+		}
+		// пройдем по всем посещенным вершинам
+		for _, v1 := range MSTPrimExact.Vertices {
+			// пройдем по всем вершинам графа
+			for _, v2 := range g.Vertices {
+				// но смотрим только на те, которые непосещенные
+				if visited[v2.Number] {
+					continue
+				}
+				// кандидат на новое ребро в мин. ост. дереве
+				potentialEdge := ExactEdge{
+					A:      v1,
+					B:      v2,
+					Weight: math.Sqrt(float64(squareDistance(v1, v2))),
+				}
+				// Может, у него вес меньше? Если да, то оно лучше
+				if potentialEdge.Weight < minEdge.Weight {
+					minEdge = potentialEdge
+				}
+			}
+		}
+
+		// В конце цикла нашли нужное ребро с минимальным весом
+		// добавляем его
+		MSTPrimExact.AddEdge(&minEdge)
+		// если A была посещенной, значит, надо добавить B, иначе А
+		if visited[minEdge.A.Number] {
+			visited[minEdge.B.Number] = true
+			MSTPrimExact.Vertices = append(MSTPrimExact.Vertices, minEdge.B)
+		} else {
+			visited[minEdge.A.Number] = true
+			MSTPrimExact.Vertices = append(MSTPrimExact.Vertices, minEdge.A)
+		}
+	}
+	// на выходе имеем мин. ост. дерево
+	return MSTPrimExact
+}
+
+func squareDistance(v1, v2 Vertex) int {
+	return ((v1.X - v2.X) * (v1.X - v2.X)) + ((v1.Y - v2.Y) * (v1.Y - v2.Y))
+}
+
 type Data struct {
-	Quantity       string
-	SwitchExact    bool
-	SwitchInterval bool
+	Quantity string
+	FileName string
 }
 
 func exactGraphPage(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
 		"static/html/common/canvasForGraph.html",
 		"static/html/exactGraph/dropdownButtonExact.html",
+		"static/html/exactGraph/uploadExactFileForm.html",
 		"static/html/common/headerMenu.html",
 		"static/html/common/clearForm.html",
 		"static/html/common/quantityForm.html")
@@ -189,10 +313,11 @@ func intervalGraphPage(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "pageForIntervalGraph", data)
 }
 
-func drawGraph(w http.ResponseWriter, r *http.Request) {
+func generateExactGraph(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
 		"static/html/common/canvasForGraph.html",
 		"static/html/exactGraph/dropdownButtonExact.html",
+		"static/html/exactGraph/uploadExactFileForm.html",
 		"static/html/common/headerMenu.html",
 		"static/html/common/clearForm.html",
 		"static/html/common/quantityForm.html")
@@ -203,6 +328,7 @@ func drawGraph(w http.ResponseWriter, r *http.Request) {
 	n, _ := strconv.Atoi(quantity)
 	if graph == nil {
 		graph = createRandomGraph(n)
+		sourceOfGraph = "generate"
 	}
 
 	graphJson, err := json.Marshal(graph)
@@ -219,12 +345,51 @@ func drawGraph(w http.ResponseWriter, r *http.Request) {
 		"</html>", graphJson)
 }
 
+func getExactGraphFromFile(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
+		"static/html/common/canvasForGraph.html",
+		"static/html/exactGraph/dropdownButtonExact.html",
+		"static/html/exactGraph/uploadExactFileForm.html",
+		"static/html/common/headerMenu.html",
+		"static/html/common/clearForm.html",
+		"static/html/common/quantityForm.html")
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if graph == nil {
+		graph, err = createGraphFromFile(string(content))
+	}
+
+	graphJson, err := json.Marshal(graph)
+	if err != nil {
+		panic(err)
+	}
+
+	t.ExecuteTemplate(w, "pageForExactGraph", nil)
+	fmt.Fprintf(w, "<script>\n"+
+		"var graph = %s;\n"+
+		"drawGraph(graph);\n"+
+		"</script>\n"+
+		"</body>\n"+
+		"</html>", graphJson)
+}
+
 func handleFunc() {
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/interval", intervalGraphPage)
 	http.HandleFunc("/exact", exactGraphPage)
-	http.HandleFunc("/exact/draw", drawGraph)
+	http.HandleFunc("/exact/generate", generateExactGraph)
+	http.HandleFunc("/exact/from-file", getExactGraphFromFile)
 	http.ListenAndServe("localhost:8080", nil)
 }
 

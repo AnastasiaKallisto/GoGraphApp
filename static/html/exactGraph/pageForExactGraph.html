@@ -10,20 +10,12 @@
 
 <p id="textExact" class="textInfo">
   {{if .Quantity}}
-  Сгенерирован граф с точными весами, количество вершин = {{.Quantity}}
+  Изображен граф с точными весами, количество вершин = {{.Quantity}}
   {{else}}
   Для начала работы сгенерируйте граф или выберите файл, из которого нужно его загрузить.
   {{end}}
 </p>
 
 {{ template "canvasForGraph" }}
-
-<form enctype="multipart/form-data" method="post">
-  <p>Загрузите ваши фотографии на сервер</p>
-  <p><input type="file" name="photo" multiple accept="image/*,image/jpeg">
-    <input type="submit" value="Отправить"></p>
-</form>
-
-
 
 {{ end }}
