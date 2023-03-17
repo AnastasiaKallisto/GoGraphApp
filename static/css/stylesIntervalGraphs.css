@@ -1,11 +1,13 @@
 .container-for-interval-graphs {
-    max-width: 1250px;
+    max-width: 70vw;
+    height: 98%;
     margin-left: 280px;
 }
 
 .container-for-interval-graph-info{
     display: flex;
-    width: 100%;
+    width: 98%;
+    height: 98vh;
     flex-direction: row;
 }
 
@@ -50,15 +52,15 @@ div:hover .interval-graph-details {
     margin:auto;
     border: 1px solid gray;
     background-color: white;
-    height: 680px;
-    width: 1150px;
+    height: 100%;
+    width: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
 }
 
 .interval-graph-info .img-container {
-    height: 670px;
-    width: 670px;
+    height: 95%;
+    width: 95%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -70,10 +72,10 @@ div:hover .interval-graph-details {
 }
 
 .text-container {
-    padding-left: 20px;
-    width: 98%;
-    overflow-y: scroll;
-    margin-left: 20px;
+    width: 35vw;
+    height: 90vh;
+    overflow-y: hidden;
+    margin-left: 1vw;
 }
 
 .interval-graph-info h2 {

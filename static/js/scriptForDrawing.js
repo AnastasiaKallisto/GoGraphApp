@@ -38,6 +38,8 @@ class ExactGraph {
 }
 
 function generateVertices(n, sizeFrameX, sizeFrameY, graph) {
+    console.log(sizeFrameX);
+    console.log(sizeFrameY);
     let centerX = sizeFrameX / 2;
     let centerY = sizeFrameY / 2;
     let radius = Math.floor(centerY * 0.9);
@@ -55,8 +57,6 @@ function generateVertices(n, sizeFrameX, sizeFrameY, graph) {
         graph.edges[i].a.x = graph.vertices[number].x;
         graph.edges[i].a.y = graph.vertices[number].y;
         number = graph.edges[i].b.number;
-        console.log(graph.edges[i].b);
-        console.log(graph.vertices[number]);
         graph.edges[i].b.x = graph.vertices[number].x;
         graph.edges[i].b.y = graph.vertices[number].y;
     }

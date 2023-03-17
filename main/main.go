@@ -333,11 +333,11 @@ type Data struct {
 }
 
 func exactGraphPage(w http.ResponseWriter, r *http.Request) {
-	graph = nil
-	sourceOfGraph = ""
-	quantity = ""
-	MSTPrimExact = nil
-	MSTKruscalExact = nil
+	//graph = nil
+	//sourceOfGraph = ""
+	//quantity = ""
+	//MSTPrimExact = nil
+	//MSTKruscalExact = nil
 	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
 		"static/html/common/canvasForGraph.html",
 		"static/html/exactGraph/dropdownButtonExact.html",
@@ -387,21 +387,12 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/exactGraph/exactQuantityForm.html")
 	data := Data{}
 	fmt.Println(quantity)
-	if quantity != "" {
-		data = Data{
-			Quantity: quantity,
-		}
-	} else {
-		quantity = r.FormValue("quantity")
-		data = Data{
-			Quantity: quantity,
-		}
-		n, _ := strconv.Atoi(quantity)
-		if graph == nil {
-			graph = createRandomGraph(n)
-			sourceOfGraph = "generate"
-		}
+	quantity = r.FormValue("quantity")
+	data = Data{
+		Quantity: quantity,
 	}
+	n, _ := strconv.Atoi(quantity)
+	graph = createRandomGraph(n)
 	graphJson, err := json.Marshal(graph)
 	if err != nil {
 		panic(err)
