@@ -8,6 +8,7 @@ import (
 	"math"
 	"math/rand"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -17,10 +18,10 @@ var typeOfGraph string   // "exact" "interval"
 var sourceOfGraph string // "generate" "fromFile"
 var quantity string      // число
 var MSTPrimExact *ExactGraph
-var MSTCruscalExact *ExactGraph
+var MSTKruscalExact *ExactGraph
 
 //var arrayMSTPrimInterval []*IntervalGraph
-//var arrayMSTCruscalInterval []*IntervalGraph
+//var arrayMSTKruscalInterval []*IntervalGraph
 
 type Vertex struct {
 	Number int `json:"number"`
@@ -69,21 +70,21 @@ func (g *ExactGraph) AddEdgeInVertexFormat(a Vertex, b Vertex, weight float64) b
 
 // AddEdge добавляет ребро в граф, если там уже не было ребра, соединяющего эти вершины
 func (g *ExactGraph) AddEdge(e *ExactEdge) bool {
-	if g.ContainsEdge(e) {
+	if g.GetEqualEdge(e) != nil {
 		return false
 	}
 	g.Edges = append(g.Edges, *e)
 	return true
 }
 
-// ContainsEdge проверяет, не содержит ли уже граф ребро, соединяющее те же самые вершины
-func (g *ExactGraph) ContainsEdge(e *ExactEdge) bool {
+// GetEqualEdge возвращает ребро, вершины которого совпадают с тем, что пришло в функцию
+func (g *ExactGraph) GetEqualEdge(e *ExactEdge) *ExactEdge {
 	for _, edge := range g.Edges {
 		if edge.isEqual(e) {
-			return true
+			return &edge
 		}
 	}
-	return false
+	return nil
 }
 
 func (e *ExactEdge) isEqual(o *ExactEdge) bool {
@@ -211,11 +212,9 @@ func containsVertex(vertices []Vertex, a Vertex) bool {
 	return false
 }
 
-func Prim(g ExactGraph) *ExactGraph {
-
+func (g *ExactGraph) Prim() *ExactGraph {
 	// будущее минимальное остовное дерево
 	MSTPrimExact = NewGraph()
-
 	// создадим отображение номеров посещенных вершин к факту их посещения
 	visited := make(map[int]bool)
 	// Первая вершина с индексом 0
@@ -224,49 +223,112 @@ func Prim(g ExactGraph) *ExactGraph {
 	visited[startingVertex.Number] = true
 	// и она есть в списке вершин минимального остовного дерева
 	MSTPrimExact.Vertices = append(MSTPrimExact.Vertices, startingVertex)
-
+	fmt.Println("Массив вершин графа: ", g.Vertices)
+	minEdge := ExactEdge{
+		Weight: math.MaxFloat64,
+	}
 	// Пока не посетим все вершины
 	for len(visited) < len(g.Vertices) {
 		// Будем искать ребро минимального веса, соединяющее посещенную и непосещенную вершину
 		// Установим максимальный вес, а с вершинами разберемся позже
-		minEdge := ExactEdge{
-			Weight: math.MaxFloat64,
-		}
+		minEdge.Weight = math.MaxFloat64
+		fmt.Println("Массив посещенных вершин: ", visited)
+		fmt.Println("Массив вершин дерева mst: ", MSTPrimExact.Vertices)
 		// пройдем по всем посещенным вершинам
 		for _, v1 := range MSTPrimExact.Vertices {
 			// пройдем по всем вершинам графа
 			for _, v2 := range g.Vertices {
 				// но смотрим только на те, которые непосещенные
 				if visited[v2.Number] {
+					fmt.Println("Вершина уже посещенная: ", v2.Number)
 					continue
 				}
+				fmt.Println("Вершина НЕ посещенная: ", v2.Number)
 				// кандидат на новое ребро в мин. ост. дереве
 				potentialEdge := ExactEdge{
-					A:      v1,
-					B:      v2,
-					Weight: math.Sqrt(float64(squareDistance(v1, v2))),
+					A: v1,
+					B: v2,
+				}
+				fmt.Println("Потенциальное ребро: ", potentialEdge)
+				// а содержится ли оно в графе?
+				graphEdge := g.GetEqualEdge(&potentialEdge)
+				fmt.Println("Аналогичное ребро из графа: ", graphEdge)
+				if graphEdge == nil {
+					continue
 				}
 				// Может, у него вес меньше? Если да, то оно лучше
-				if potentialEdge.Weight < minEdge.Weight {
-					minEdge = potentialEdge
+				if graphEdge.Weight < minEdge.Weight {
+					minEdge = *graphEdge
 				}
 			}
 		}
-
 		// В конце цикла нашли нужное ребро с минимальным весом
 		// добавляем его
+		fmt.Println("В итоге добавляем minEdge &minEdge: ", minEdge, &minEdge)
 		MSTPrimExact.AddEdge(&minEdge)
 		// если A была посещенной, значит, надо добавить B, иначе А
 		if visited[minEdge.A.Number] {
 			visited[minEdge.B.Number] = true
 			MSTPrimExact.Vertices = append(MSTPrimExact.Vertices, minEdge.B)
+			fmt.Println("В граф добавили вершину: ", minEdge.B)
 		} else {
 			visited[minEdge.A.Number] = true
 			MSTPrimExact.Vertices = append(MSTPrimExact.Vertices, minEdge.A)
+			fmt.Println("В граф добавили вершину: ", minEdge.A)
 		}
 	}
+	fmt.Println("Минимальное ост дерево: ", MSTPrimExact)
 	// на выходе имеем мин. ост. дерево
 	return MSTPrimExact
+}
+
+func (g *ExactGraph) Kruskal() *ExactGraph {
+	// Создаём новый граф только с вершинами
+	resultGraph := NewGraph()
+	// Копируем все рёбра и сортируем их по весу
+	edges := g.Edges
+	sort.Slice(edges, func(i, j int) bool {
+		return edges[i].Weight < edges[j].Weight
+	})
+	// Алгоритм Краскала
+	for _, e := range edges {
+		// Если добавление ребра приведёт к циклу - не добавляем
+		if !searchChain(e.A, e.B, resultGraph.Edges, []Vertex{}) {
+			resultGraph.AddEdge(&e)
+			resultGraph.AddVertex(e.A)
+			resultGraph.AddVertex(e.B)
+		}
+	}
+	return resultGraph
+}
+
+func searchChain(a Vertex, b Vertex, graphEdges []ExactEdge, checkedVertices []Vertex) bool {
+	var verticesThatNeedToBeChecked []Vertex
+	for _, edge := range graphEdges {
+		if edge.A == a {
+			if edge.B == b {
+				return true
+			}
+			if !containsVertex(checkedVertices, edge.B) {
+				verticesThatNeedToBeChecked = append(verticesThatNeedToBeChecked, edge.B)
+			}
+		}
+		if edge.B == a {
+			if edge.A == b {
+				return true
+			}
+			if !containsVertex(checkedVertices, edge.A) {
+				verticesThatNeedToBeChecked = append(verticesThatNeedToBeChecked, edge.A)
+			}
+		}
+	}
+	checkedVertices = append(checkedVertices, a)
+	for _, vertex := range verticesThatNeedToBeChecked {
+		if searchChain(vertex, b, graphEdges, checkedVertices) {
+			return true
+		}
+	}
+	return false
 }
 
 func squareDistance(v1, v2 Vertex) int {
@@ -283,7 +345,7 @@ func exactGraphPage(w http.ResponseWriter, r *http.Request) {
 	sourceOfGraph = ""
 	quantity = ""
 	MSTPrimExact = nil
-	MSTCruscalExact = nil
+	MSTKruscalExact = nil
 	t, _ := template.ParseFiles("static/html/exactGraph/pageForExactGraph.html",
 		"static/html/common/canvasForGraph.html",
 		"static/html/exactGraph/dropdownButtonExact.html",
@@ -349,15 +411,20 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	primJson, err := json.Marshal(Prim(*graph))
+	prim := graph.Prim()
+	fmt.Println("Посчитали прима ")
+	primJson, err := json.Marshal(prim)
 	if err != nil {
 		panic(err)
 	}
-	cruscalJson, err := json.Marshal(Prim(*graph))
+	kruscal := graph.Kruskal()
+	fmt.Println("Посчитали краскала ")
+	KruscalJson, err := json.Marshal(kruscal)
 	if err != nil {
 		panic(err)
 	}
 	t.ExecuteTemplate(w, "pageForExactGraph", data)
+	fmt.Println("Прогрузил страницу")
 	fmt.Fprintf(w, "<script>\n"+
 		"var graph = %s;\n"+
 		"drawGraph(graph);\n", graphJson)
@@ -365,15 +432,34 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 		"var primGraph = %s;\n"+
 			"drawPrimTree(primGraph);\n", primJson)
 	fmt.Fprintf(w,
-		"var cruscalGraph = %s;\n"+
-			"drawCruscalTree(cruscalGraph);\n", cruscalJson)
+		"var KruscalGraph = %s;\n"+
+			"drawCruscalTree(KruscalGraph);\n", KruscalJson)
+	fmt.Println("Загрузил скрипт")
 	fmt.Fprintf(w,
 		"document.getElementById('textGraph').value = '%s';\n"+
 			"document.getElementById('MSTPrim').value = '%s';\n"+
 			"document.getElementById('MSTCruscal').value = '%s';\n"+
 			"</script>\n"+
 			"</body>\n"+
-			"</html>", graphJson, primJson, cruscalJson)
+			"</html>", graphToReadingFormat(graph), graphToReadingFormat(prim), graphToReadingFormat(kruscal))
+	fmt.Println("присвоил значения текстовые")
+}
+
+func graphToReadingFormat(graph *ExactGraph) string {
+	answer := "Ребра:\\n"
+	for _, edge := range graph.Edges {
+		answer = strings.Join([]string{
+			answer,
+			"V",
+			strconv.Itoa(edge.A.Number),
+			" V",
+			strconv.Itoa(edge.B.Number),
+			" W = ",
+			fmt.Sprintf("%.2f", edge.Weight),
+			"\\n",
+		}, "")
+	}
+	return answer
 }
 
 func getExactGraphFromFilePage(w http.ResponseWriter, r *http.Request) {

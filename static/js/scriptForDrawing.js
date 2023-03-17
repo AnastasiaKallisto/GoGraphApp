@@ -102,16 +102,15 @@ function drawPrimTree(graph) {
     ctx.fillStyle = 'blue';
     graph.edges.forEach(function(edge) {
         ctx.beginPath();
-        ctx.moveTo(edge.a.x +2, edge.a.y+2);
-        ctx.lineTo(edge.b.x+2, edge.b.y+2);
+        ctx.moveTo(edge.a.x +3, edge.a.y+3);
+        ctx.lineTo(edge.b.x+3, edge.b.y+3);
         ctx.stroke();
-        ctx.fillText( edge.weight, Math.round((edge.a.x+edge.b.x)*0.5)-10, Math.round((edge.a.y+edge.b.y)*0.5)-10);
     });
     // Вершины
     ctx.fillStyle = 'blue';
     graph.vertices.forEach(function(vertex) {
         ctx.beginPath();
-        ctx.arc(vertex.x+2, vertex.y+2, 2, 0, 2*Math.PI);
+        ctx.arc(vertex.x+3, vertex.y+3, 2, 0, 2*Math.PI);
         ctx.fill();
     });
 }
@@ -128,16 +127,15 @@ function drawCruscalTree(graph) {
     ctx.fillStyle = 'red';
     graph.edges.forEach(function(edge) {
         ctx.beginPath();
-        ctx.moveTo(edge.a.x -2, edge.a.y-2);
-        ctx.lineTo(edge.b.x-2, edge.b.y-2);
+        ctx.moveTo(edge.a.x -3, edge.a.y-3);
+        ctx.lineTo(edge.b.x-3, edge.b.y-3);
         ctx.stroke();
-        ctx.fillText( edge.weight, Math.round((edge.a.x+edge.b.x)*0.5)-10, Math.round((edge.a.y+edge.b.y)*0.5)-10);
     });
     // Вершины
     ctx.fillStyle = 'blue';
     graph.vertices.forEach(function(vertex) {
         ctx.beginPath();
-        ctx.arc(vertex.x-2, vertex.y-2, 2, 0, 2*Math.PI);
+        ctx.arc(vertex.x-3, vertex.y-3, 2, 0, 2*Math.PI);
         ctx.fill();
     });
 }

@@ -19,6 +19,7 @@
 
 <script>
   document.getElementById("generate").onclick = function() {
+      this.setAttribute('href', '/exact');
       this.setAttribute('href', this.getAttribute('href')
           .concat("/generate?quantity="+document.getElementById("quantity").value));
   }
