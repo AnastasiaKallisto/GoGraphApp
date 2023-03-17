@@ -112,10 +112,6 @@ func noOrderEqual(a []Vertex, b []Vertex) bool {
 	return true
 }
 
-func (e *ExactEdge) CompareTo(o *ExactEdge) float64 {
-	return e.Weight - o.Weight
-}
-
 type ExactGraph struct {
 	Edges    []ExactEdge `json:"edges"`
 	Vertices []Vertex    `json:"vertices"`
@@ -331,10 +327,6 @@ func searchChain(a Vertex, b Vertex, graphEdges []ExactEdge, checkedVertices []V
 	return false
 }
 
-func squareDistance(v1, v2 Vertex) int {
-	return ((v1.X - v2.X) * (v1.X - v2.X)) + ((v1.Y - v2.Y) * (v1.Y - v2.Y))
-}
-
 type Data struct {
 	Quantity string
 	FileName string
@@ -351,6 +343,7 @@ func exactGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/exactGraph/dropdownButtonExact.html",
 		"static/html/exactGraph/uploadExactFileForm.html",
 		"static/html/common/headerMenu.html",
+		"static/html/exactGraph/checkoutIntervalForm.html",
 		"static/html/exactGraph/exactClearForm.html",
 		"static/html/exactGraph/exactQuantityForm.html",
 	)
@@ -373,6 +366,7 @@ func intervalGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/intervalGraph/formForIntervalGraphInfo.html",
 		"static/html/common/headerMenu.html",
 		"static/html/intervalGraph/intervalClearForm.html",
+		"static/html/intervalGraph/checkoutExactForm.html",
 		"static/html/intervalGraph/intervalQuantityForm.html",
 		"static/html/intervalGraph/uploadIntervalFileForm.html")
 	quantity := r.FormValue("quantity")
@@ -389,6 +383,7 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 		"static/html/exactGraph/uploadExactFileForm.html",
 		"static/html/common/headerMenu.html",
 		"static/html/exactGraph/exactClearForm.html",
+		"static/html/exactGraph/checkoutIntervalForm.html",
 		"static/html/exactGraph/exactQuantityForm.html")
 	data := Data{}
 	fmt.Println(quantity)
@@ -412,19 +407,16 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	prim := graph.Prim()
-	fmt.Println("Посчитали прима ")
 	primJson, err := json.Marshal(prim)
 	if err != nil {
 		panic(err)
 	}
 	kruscal := graph.Kruskal()
-	fmt.Println("Посчитали краскала ")
 	KruscalJson, err := json.Marshal(kruscal)
 	if err != nil {
 		panic(err)
 	}
 	t.ExecuteTemplate(w, "pageForExactGraph", data)
-	fmt.Println("Прогрузил страницу")
 	fmt.Fprintf(w, "<script>\n"+
 		"var graph = %s;\n"+
 		"drawGraph(graph);\n", graphJson)
@@ -434,7 +426,6 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w,
 		"var KruscalGraph = %s;\n"+
 			"drawCruscalTree(KruscalGraph);\n", KruscalJson)
-	fmt.Println("Загрузил скрипт")
 	fmt.Fprintf(w,
 		"document.getElementById('textGraph').value = '%s';\n"+
 			"document.getElementById('MSTPrim').value = '%s';\n"+
@@ -442,7 +433,6 @@ func generateExactGraphPage(w http.ResponseWriter, r *http.Request) {
 			"</script>\n"+
 			"</body>\n"+
 			"</html>", graphToReadingFormat(graph), graphToReadingFormat(prim), graphToReadingFormat(kruscal))
-	fmt.Println("присвоил значения текстовые")
 }
 
 func graphToReadingFormat(graph *ExactGraph) string {
@@ -468,6 +458,7 @@ func getExactGraphFromFilePage(w http.ResponseWriter, r *http.Request) {
 		"static/html/exactGraph/dropdownButtonExact.html",
 		"static/html/exactGraph/uploadExactFileForm.html",
 		"static/html/common/headerMenu.html",
+		"static/html/exactGraph/checkoutIntervalForm.html",
 		"static/html/exactGraph/exactClearForm.html",
 		"static/html/exactGraph/exactQuantityForm.html")
 	file, _, err := r.FormFile("exactGraphTxtFile")
@@ -506,7 +497,7 @@ func handleFunc() {
 	http.HandleFunc("/interval", intervalGraphPage)
 	http.HandleFunc("/exact", exactGraphPage)
 	http.HandleFunc("/exact/generate", generateExactGraphPage)
-	http.HandleFunc("/exact/from-file", getExactGraphFromFilePage)
+	//http.HandleFunc("/exact/from-file", getExactGraphFromFilePage)
 	http.ListenAndServe("localhost:8080", nil)
 }
 

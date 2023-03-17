@@ -1,0 +1,13 @@
+{{ define "checkoutExactForm"}}
+
+<dialog class="littleForm" id="checkoutExactForm">
+<form class="form-container">
+<p>Вы действительно закончить работу</p>
+<p>и переключиться на точные веса?</p>
+<div class="buttons-container">
+<button type="button" class="btn-cancel" onclick='closeForm("checkoutExactForm")'>Нет</button>
+<a type="submit" class="btn" href="/exact">Да</a>
+</div>
+</form>
+</dialog>
+{{ end}}
